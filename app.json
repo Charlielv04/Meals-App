@@ -25,6 +25,12 @@
     },
     "web": {
       "favicon": "./assets/favicon.png"
-    }
+    },
+    "extra": {
+      "eas": {
+        "projectId": "124fc06f-7607-4927-87aa-d4b5c65ca74d"
+      }
+    },
+    "owner": "carloslv04"
   }
 }
