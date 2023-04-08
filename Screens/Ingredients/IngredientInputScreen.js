@@ -101,7 +101,7 @@ export class IngredientInputScreen extends React.Component{
       <View style={styles.container}>
         <View style={styles.row}>
             <TextInput value={currentIngredient} placeholder='ingredient' onChangeText={(text) => this.setState({ currentIngredient: text })} />
-            <TextInput value={currentPrice} placeholder='price' onChangeText={(text) => this.setState({ currentPrice: text })} />
+            <TextInput value={currentPrice} keyboardType='numeric' placeholder='price' onChangeText={(text) => this.setState({ currentPrice: text })} />
             <TwoOptionButton 
                     option1Text='kg'
                     option2Text='unit'
@@ -109,10 +109,10 @@ export class IngredientInputScreen extends React.Component{
         </View>
         <Text>Nutritional Value per 100g</Text>
         <View style={styles.row}>
-            <TextInput value={currentCalories} placeholder='kcal' onChangeText={(text) => this.setState({ currentCalories: text })} />
-            <TextInput value={currentCarbs} placeholder='carbs' onChangeText={(text) => this.setState({ currentCarbs: text })} />
-            <TextInput value={currentProteins} placeholder='proteins' onChangeText={(text) => this.setState({ currentProteins: text })} />
-            <TextInput value={currentFats} placeholder='fats' onChangeText={(text) => this.setState({ currentFats: text })} />
+            <TextInput value={currentCalories} keyboardType='numeric' placeholder='kcal' onChangeText={(text) => this.setState({ currentCalories: text })} />
+            <TextInput value={currentCarbs} keyboardType='numeric' placeholder='carbs' onChangeText={(text) => this.setState({ currentCarbs: text })} />
+            <TextInput value={currentProteins} keyboardType='numeric' placeholder='proteins' onChangeText={(text) => this.setState({ currentProteins: text })} />
+            <TextInput value={currentFats} keyboardType='numeric' placeholder='fats' onChangeText={(text) => this.setState({ currentFats: text })} />
         </View>
         <Button title="Add Ingredient" onPress={this.addIngredient} />
         <View style = {styles.row}>

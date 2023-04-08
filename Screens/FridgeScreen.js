@@ -3,6 +3,7 @@ import { View, Text, TextInput, StyleSheet, Button, Image } from 'react-native'
 import { Ingredient } from '../Components/Ingredient'
 import * as SQLite from 'expo-sqlite'
 
+
 export class FridgeScreen extends React.Component{
     constructor(props){
         super(props)
@@ -10,7 +11,6 @@ export class FridgeScreen extends React.Component{
             db: SQLite.openDatabase('meals.db'),
             isLoading: true, 
             fridge: [],
-            ingredients: []
         }
     }
     componentDidMount(){
@@ -72,6 +72,7 @@ export class FridgeScreen extends React.Component{
                   <TextInput
                     value={ingredient.qtext}
                     placeholder='0'
+                    keyboardType='numeric'
                     onChangeText={(text) =>
                       this.handleQuantityChange(index, text)
                     }
