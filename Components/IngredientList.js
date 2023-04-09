@@ -22,6 +22,7 @@ export class IngredientList extends React.Component {
               index={index}
               ingredient={ingredient}
               deleteIngredient={this.props.deleteIngredient}
+              ingredientDetails={this.props.ingredientDetails}
             />
           )
         })}

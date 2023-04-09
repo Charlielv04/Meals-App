@@ -1,8 +1,6 @@
 import React from 'react'
 import { View, Text, TextInput, StyleSheet, Button, Image } from 'react-native'
-import { Ingredient } from '../../Components/Ingredient'
 import { TwoOptionButton } from '../../Components/TwoOptionButton'
-import { getDBConnection, addIngredient } from '../../Databases/db-manager'
 import * as SQLite from 'expo-sqlite'
 import { IngredientList } from '../../Components/IngredientList'
 
@@ -23,6 +21,8 @@ export class IngredientInputScreen extends React.Component{
           currentCarbs: '',
           currentProteins: '',
           currentFats: '',
+          currentLink: '',
+          currentShop: '',
         };
       }
     
@@ -44,9 +44,10 @@ export class IngredientInputScreen extends React.Component{
     }
 
   addIngredient = () => {
-    const { db, ingredients, currentIngredient, currentPrice, currentUnit, currentCalories, currentCarbs, currentFats, currentProteins } = this.state;
+    const { db, ingredients, currentIngredient, currentPrice, currentUnit, currentCalories, currentCarbs, currentFats, currentProteins, currentLink, currentShop } = this.state;
     db.transaction(tx => {
-      tx.executeSql('INSERT INTO ingredients (name, price, unit, calories, carbs, proteins, fats ) values (?, ?, ?, ?, ?, ?, ?)', [currentIngredient, currentPrice, currentUnit, currentCalories, currentCarbs,  currentProteins, currentFats],
+      tx.executeSql('INSERT INTO ingredients (name, price, unit, calories, carbs, proteins, fats, shop, link ) values (?, ?, ?, ?, ?, ?, ?, ?, ?)', 
+      [currentIngredient, currentPrice, currentUnit, currentCalories, currentCarbs,  currentProteins, currentFats, currentShop, currentLink],
         (txObj, resultSet) => {
           let existingIngredients = [...ingredients];
           existingIngredients.push({ id: resultSet.insertId, 
@@ -56,7 +57,9 @@ export class IngredientInputScreen extends React.Component{
                 calories: currentCalories,
                 carbs: currentCarbs,
                 proteins: currentProteins,
-                fats: currentFats  });
+                fats: currentFats,
+                shop: currentShop,
+                link: currentLink,  });
           this.setState({ ingredients: existingIngredients, 
                 currentIngredient: undefined, 
                 currentPrice: undefined, 
@@ -64,7 +67,9 @@ export class IngredientInputScreen extends React.Component{
                 currentCalories: undefined,
                 currentCarbs: undefined,
                 currentFats: undefined,
-                currentProteins: undefined });
+                currentProteins: undefined,
+                currentShop: undefined,
+                currentLink: undefined, });
         },
         (txObj, error) => console.log(error)
       );
@@ -78,9 +83,17 @@ export class IngredientInputScreen extends React.Component{
         this.setState({ currentUnit: 'unit' })
     }
   }
+  handleShopChange = (value) => {
+    if (value == 1){
+        this.setState({ currentShop: 'Auchan' })
+    } else if (value == 2){
+        this.setState({ currentShop: 'Carrefour' })
+    }
+  }
   eliminateTable = () => {
     const {db} = this.state
     db.transaction(tx => {
+        tx.executeSql('DROP TABLE IF EXISTS ingredients')
         tx.executeSql('DROP TABLE IF EXISTS fridge')
         },
         (txObj, resultSet) => console.log('Table fridge dropped'),
@@ -88,7 +101,7 @@ export class IngredientInputScreen extends React.Component{
       )
   }
   render() {
-    const { isLoading, currentIngredient, currentPrice, currentUnit, currentCalories, currentCarbs, currentFats, currentProteins } = this.state;
+    const { isLoading, currentIngredient, currentPrice, currentUnit, currentCalories, currentCarbs, currentFats, currentProteins, currentShop, currentLink } = this.state;
     if (isLoading) {
       return (
         <View style={styles.container}>
@@ -114,93 +127,31 @@ export class IngredientInputScreen extends React.Component{
             <TextInput value={currentProteins} keyboardType='numeric' placeholder='proteins' onChangeText={(text) => this.setState({ currentProteins: text })} />
             <TextInput value={currentFats} keyboardType='numeric' placeholder='fats' onChangeText={(text) => this.setState({ currentFats: text })} />
         </View>
+        <View style={styles.row}>
+          <View style={styles.textInputContainer}>
+            <TextInput
+              value={currentLink}
+              multiline
+              editable
+              placeholder='link'
+              onChangeText={(text) => this.setState({currentLink: text})}
+              style={styles.textInput}
+            />
+          </View>
+          <TwoOptionButton
+            option1Text='Auchan'
+            option2Text='Carrefour'
+            onPress={this.handleShopChange}
+          />
+        </View>
         <Button title="Add Ingredient" onPress={this.addIngredient} />
         <View style = {styles.row}>
             <Text style={styles.title}>{currentIngredient}</Text>
             <Text style={styles.text}>{currentPrice}€/{currentUnit}</Text>
         </View>
-
+        <Button title='eliminate tables' onPress={this.eliminateTable}/>
        </View>
     )}
-    /*
-    constructor(props){
-        super(props)
-        this.state = {
-            ingredient: {
-                name: '',
-                price: '',
-                unit: '',
-            },
-            confirmation: ''
-        }
-    }
-    handleIngredientChange = (name) => {
-        this.setState({
-            ingredient: {
-                ...this.state.ingredient,
-                name: name
-            },
-        })
-    }
-    handlePriceChange = (price) => {
-        this.setState({
-            ingredient: {
-                ...this.state.ingredient,
-                price: price,
-            },
-        })
-    }
-    handleUnitChange = (value) => {
-        if (value == 1){
-            this.setState({
-                ingredient: {
-                    ...this.state.ingredient,
-                    unit: 'kg',
-                },
-            })
-        } else if (value == 2){
-            this.setState({
-                ingredient: {
-                    ...this.state.ingredient,
-                    unit: 'unit',
-                },
-            })
-        }
-    }
-    addIngredient = async () => {
-        if (this.state.ingredient.name.length != 0 
-            && !isNaN(parseInt(this.state.ingredient.price, 10)) 
-            && this.state.ingredient.unit.length != 0){
-        this.setState({
-            confirmation: 'The ingredient is being added'
-        })
-        const db = await getDBConnection()
-        this.setState({
-            confirmation: 'The ingredient is in the proccess added'
-        })
-        await addIngredient(db, this.state.ingredient)
-        this.setState({
-            confirmation: 'The ingredient has been added'
-        })
-
-        }
-    }
-    render(){
-        return(
-            <View>
-                <TextInput style={styles.input} value={this.state.ingredient.name} onChangeText={this.handleIngredientChange} placeholder="Ingredient Name"/>
-                <TextInput style={styles.input} value={this.state.ingredient.price} onChangeText={this.handlePriceChange} placeholder="Price"/>
-                <TwoOptionButton 
-                    option1Text='kg'
-                    option2Text='unit'
-                    onPress={this.handleUnitChange}/>
-                <Ingredient ingredient={this.state.ingredient}/>
-                <Button title='Add' onPress={this.addIngredient}/>
-                <Text>{this.state.confirmation}</Text>
-            </View>
-        )
-    }
-    */
 }
 
 const styles = StyleSheet.create({
@@ -225,6 +176,16 @@ const styles = StyleSheet.create({
         alignSelf: 'stretch',
         justifyContent: 'space-between',
         margin: 8
+      },
+
+      textInputContainer: {
+        flex: 1,
+        maxWidth: '50%',
+        paddingRight: 10,
+      },
+      textInput: {
+        flex: 1,
+        maxHeight: 100,
       },
       title: {
         fontWeight: 'bold',

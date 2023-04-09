@@ -7,6 +7,7 @@ import { StyleSheet, Text, View } from 'react-native'
 import { createStackNavigator } from '@react-navigation/stack'
 import { IngredientInputScreen } from './IngredientInputScreen'
 import { IngredientListScreen } from './IngredientListScreen'
+import { IngredientDetailScreen } from './IngredientDetailScreen'
 
 const IngredientStack = createStackNavigator()
 
@@ -15,6 +16,7 @@ export default function IngredientStackScreen(){
     <IngredientStack.Navigator initialRouteName='IngredientListScreen'>
       <IngredientStack.Screen name='IngredientListScreen' component={IngredientListScreen}/>
       <IngredientStack.Screen name='IngredientInputScreen' component={IngredientInputScreen}/>
+      <IngredientStack.Screen name='IngredientDetailScreen' component={IngredientDetailScreen}/>
     </IngredientStack.Navigator>
   )
 }

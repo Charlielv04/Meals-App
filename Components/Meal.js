@@ -1,23 +1,16 @@
 import React from 'react'
 import {Text, Image, StyleSheet, View, TouchableHighlight, Button} from 'react-native'
 
-export class Ingredient extends React.Component {
+export class Meal extends React.Component {
     constructor(props){
         super(props)
-        this.state = {
-            id: 0
-        }
     }
     render(){
         return(
             <View key={this.props.index} style={styles.row}>
-                <TouchableHighlight onPress = {() => this.props.ingredientDetails(this.props.ingredient.id)} underlayColor='transparent'>
-                    <View style = {styles.row}>
-                        <Text style={styles.title}>{this.props.ingredient.name}</Text>
-                        <Text style={styles.text}>{this.props.ingredient.price}€/{this.props.ingredient.unit}</Text>
-                        <Button title='Delete' onPress={() => this.props.deleteIngredient(this.props.ingredient.id)} />
-                    </View>
-                </TouchableHighlight>
+                <Text style={styles.title}>{this.props.meal.name}</Text>
+                <Text style={styles.text}>{this.props.meal.price}€/{this.props.ingredient.unit}</Text>
+                <Button title='Delete' onPress={() => this.props.deleteMeal(this.props.meal.id)} />
             </View>
         )
     }

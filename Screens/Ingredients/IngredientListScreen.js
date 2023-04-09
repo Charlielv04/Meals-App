@@ -26,7 +26,7 @@ export class IngredientListScreen extends Component {
     const { db } = this.state;
 
     db.transaction(tx => {
-      tx.executeSql('CREATE TABLE IF NOT EXISTS ingredients (id INTEGER PRIMARY KEY AUTOINCREMENT, name TEXT, price TEXT, unit TEXT, calories TEXT, carbs TEXT, proteins TEXT, fats TEXT)')
+      tx.executeSql('CREATE TABLE IF NOT EXISTS ingredients (id INTEGER PRIMARY KEY AUTOINCREMENT, name TEXT, price TEXT, unit TEXT, calories TEXT, carbs TEXT, proteins TEXT, fats TEXT, link TEXT, shop TEXT)')
     });
 
     db.transaction(tx => {
@@ -54,18 +54,9 @@ export class IngredientListScreen extends Component {
     });
   };
 
-  showIngredients = () => {
-    const { ingredients } = this.state;
-    return ingredients.map((ingredient, index) => {
-      return (
-        <View key={index} style={styles.row}>
-          <Text style={styles.title}>{ingredient.name}</Text>
-          <Text style={styles.text}>{ingredient.price}€/{ingredient.unit}</Text>
-          <Button title='Delete' onPress={() => this.deleteIngredient(ingredient.id)} />
-        </View>
-      );
-    });
-  };
+  ingredientDetails = (id) => {
+    this.props.navigation.navigate('IngredientDetailScreen', {id: id})
+  }
 
   addIngredientScreen = () => {
     this.props.navigation.navigate('IngredientInputScreen')
@@ -84,7 +75,7 @@ export class IngredientListScreen extends Component {
     return (
       <View style={styles.container}>
         <Button title="Add Ingredient" onPress={this.addIngredientScreen} />
-        <IngredientList ingredients={this.state.ingredients} deleteIngredient={this.deleteIngredient}/>
+        <IngredientList ingredients={this.state.ingredients} deleteIngredient={this.deleteIngredient} ingredientDetails={this.ingredientDetails}/>
       </View>
     )
   }
