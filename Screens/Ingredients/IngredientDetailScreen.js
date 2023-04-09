@@ -8,12 +8,12 @@ export class IngredientDetailScreen extends React.Component {
         this.state = {
             db: SQLite.openDatabase('meals.db'),
             ingredient: {},
+            id: this.props.route.params.id
             
         }
     }
     componentDidMount(){
-        const { db } = this.state
-        const { id } = this.props.route.params
+        const { db, id} = this.state
         db.transaction(tx => {
             tx.executeSql('SELECT * FROM ingredients WHERE id = ?', [id],
             (txObj, resultSet) => {
@@ -27,6 +27,15 @@ export class IngredientDetailScreen extends React.Component {
             })
         })
     }
+    deleteIngredient = () => {
+        const { db } = this.state
+        const { id } = this.state
+        db.transaction(tx => {
+            tx.executeSql('DELETE FROM ingredients WHERE id = ?', [id]),
+            (txObj, error) => console.log(error)
+        })
+        this.props.navigation.navigate('IngredientListScreen')
+    }
     render(){
         return(
             <View>
@@ -39,6 +48,7 @@ export class IngredientDetailScreen extends React.Component {
                     carbohydrates, {this.state.ingredient.proteins} g of proteins, 
                     and {this.state.ingredient.fats} g of fats per 100 grams. 
                 </Text>
+                <Button title='Delete' onPress={this.deleteIngredient} />
             </View>
         )
     }    

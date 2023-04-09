@@ -15,7 +15,6 @@ export class Ingredient extends React.Component {
                     <View style = {styles.row}>
                         <Text style={styles.title}>{this.props.ingredient.name}</Text>
                         <Text style={styles.text}>{this.props.ingredient.price}€/{this.props.ingredient.unit}</Text>
-                        <Button title='Delete' onPress={() => this.props.deleteIngredient(this.props.ingredient.id)} />
                     </View>
                 </TouchableHighlight>
             </View>
