@@ -1,5 +1,6 @@
 import React from 'react'
 import { View, Text, TextInput, StyleSheet, Button, Image } from 'react-native'
+import * as SQLite from 'expo-sqlite'
 
 export class MealsScreen extends React.Component{
     constructor(props){
@@ -22,7 +23,7 @@ export class MealsScreen extends React.Component{
         })
         db.transaction(tx => {
             tx.executeSql('SELECT * FROM meals', null,
-            (txObj, resultSet) => this.setState({ fridge: resultSet.rows._array }),
+            (txObj, resultSet) => this.setState({ meals: resultSet.rows._array }),
             (txObj, error) => console.log(error))
         })
         this.setState({ isLoading: false })  

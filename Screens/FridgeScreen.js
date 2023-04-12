@@ -1,7 +1,8 @@
 import React from 'react'
-import { View, Text, TextInput, StyleSheet, Button, Image } from 'react-native'
+import { View, Text, TextInput, StyleSheet, Button, Image, ScrollView } from 'react-native'
 import { Ingredient } from '../Components/Ingredient'
 import * as SQLite from 'expo-sqlite'
+
 
 
 export class FridgeScreen extends React.Component{
@@ -64,6 +65,7 @@ export class FridgeScreen extends React.Component{
 
     showFridge = () => {
         return (
+          <ScrollView>
           <View>
             {this.state.fridge.map((ingredient, index) => {
               return (
@@ -81,6 +83,7 @@ export class FridgeScreen extends React.Component{
               );
             })}
           </View>
+          </ScrollView>
         );
       };
 

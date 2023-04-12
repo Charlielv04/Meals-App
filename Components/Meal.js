@@ -9,8 +9,7 @@ export class Meal extends React.Component {
         return(
             <View key={this.props.index} style={styles.row}>
                 <Text style={styles.title}>{this.props.meal.name}</Text>
-                <Text style={styles.text}>{this.props.meal.price}€/{this.props.ingredient.unit}</Text>
-                <Button title='Delete' onPress={() => this.props.deleteMeal(this.props.meal.id)} />
+                <Text style={styles.text}>{this.props.meal.price}€</Text>
             </View>
         )
     }

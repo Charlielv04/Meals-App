@@ -177,7 +177,7 @@ const styles = StyleSheet.create({
         justifyContent: 'space-between',
         margin: 8
       },
-
+      
       textInputContainer: {
         flex: 1,
         maxWidth: '50%',
