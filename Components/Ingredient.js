@@ -8,6 +8,7 @@ export class Ingredient extends React.Component {
             id: 0
         }
     }
+    
     render(){
         return(
             <View key={this.props.index} style={styles.row}>

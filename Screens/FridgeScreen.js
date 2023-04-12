@@ -1,6 +1,7 @@
 import React from 'react'
 import { View, Text, TextInput, StyleSheet, Button, Image, ScrollView } from 'react-native'
 import * as SQLite from 'expo-sqlite'
+import StringToFloat from '../Components/StringToFloat'
 
 
 
@@ -49,7 +50,7 @@ export class FridgeScreen extends React.Component{
           newFridge[index].quantity = 0
           newFridge[index].qtext = ''
         } else {
-          newFridge[index].quantity = parseFloat(qtext);
+          newFridge[index].quantity = StringToFloat(qtext);
           newFridge[index].qtext = qtext
         }
         this.setState({ fridge: newFridge }, () => {

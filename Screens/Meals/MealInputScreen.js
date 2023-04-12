@@ -2,6 +2,7 @@ import React from 'react';
 import { View, Text, TextInput, StyleSheet, Button, Image, ScrollView, Dimensions } from 'react-native'
 import * as SQLite from 'expo-sqlite'
 import SearchableDropDown from 'react-native-searchable-dropdown'
+import StringToFloat from '../../Components/StringToFloat';
 
 export class MealInputScreen extends React.Component {
   constructor(props) {
@@ -73,7 +74,7 @@ export class MealInputScreen extends React.Component {
       newIngredients[index].quantity = 0
       newIngredients[index].qtext = ''
     } else {
-      newIngredients[index].quantity = parseFloat(qtext);
+      newIngredients[index].quantity = StringToFloat(qtext);
       newIngredients[index].qtext = qtext
     }
     this.setState({ ingredients: newIngredients })
@@ -84,25 +85,26 @@ export class MealInputScreen extends React.Component {
     const { ingredients, price, calories, proteins, carbs, fats } = this.state
     let [newPrice, newCalories, newProteins, newCarbs, newFats] = [0, 0, 0, 0, 0]
     ingredients.forEach((ingredient) => {
-      newPrice += parseFloat(ingredient.price) * ingredient.quantity
+      newPrice += ingredient.price * ingredient.quantity
       if (ingredient.unit === 'kg') {
-        newCalories += parseFloat(ingredient.calories) * ingredient.quantity * 10
-        newProteins += parseFloat(ingredient.proteins) * ingredient.quantity * 10
-        newFats += parseFloat(ingredient.fats) * ingredient.quantity * 10
-        newCarbs += parseFloat(ingredient.carbs) * ingredient.quantity * 10
+        newCalories += ingredient.calories * ingredient.quantity * 10
+        newProteins += ingredient.proteins * ingredient.quantity * 10
+        newFats += ingredient.fats * ingredient.quantity * 10
+        newCarbs += ingredient.carbs * ingredient.quantity * 10
       } else {
-        newCalories += parseFloat(ingredient.calories) * ingredient.quantity
-        newProteins += parseFloat(ingredient.proteins) * ingredient.quantity
-        newFats += parseFloat(ingredient.fats) * ingredient.quantity
-        newCarbs += parseFloat(ingredient.carbs) * ingredient.quantity
+        newCalories += ingredient.calories * ingredient.quantity
+        newProteins += ingredient.proteins * ingredient.quantity
+        newFats += ingredient.fats * ingredient.quantity
+        newCarbs += ingredient.carbs * ingredient.quantity
       }
+      console.log(ingredient)
     })
     this.setState({
-      price: newPrice.toString(),
-      calories: newCalories.toString(),
-      proteins: newProteins.toString(),
-      carbs: newCarbs.toString(),
-      fats: newFats.toString()
+      price: newPrice,
+      calories: newCalories,
+      proteins: newProteins,
+      carbs: newCarbs,
+      fats: newFats
     })
   }
   addMeal = () => {
@@ -160,6 +162,12 @@ export class MealInputScreen extends React.Component {
             onChangeText={(text) => this.setState({currentName: text})}
             />
             <Text>{this.state.price}</Text>
+          </View>
+          <View style={styles.row}>
+            <Text>Calories: {this.state.calories}</Text>
+            <Text>Carbs: {this.state.carbs}</Text>
+            <Text>Proteins: {this.state.proteins}</Text>
+            <Text>Fats: {this.state.fats}</Text>
           </View>
           <Button title='Add Meal' onPress={() => this.addMeal()}/>
       </View>

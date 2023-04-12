@@ -45,17 +45,17 @@ export class IngredientInputScreen extends React.Component{
 
     db.transaction(tx => {
       tx.executeSql('INSERT INTO ingredients (name, price, unit, calories, carbs, proteins, fats, shop, link ) values (?, ?, ?, ?, ?, ?, ?, ?, ?)', 
-      [currentIngredient, currentPrice, currentUnit, currentCalories, currentCarbs,  currentProteins, currentFats, currentShop, currentLink],
+      [currentIngredient, StringToFloat(currentPrice), currentUnit, StringToFloat(currentCalories), StringToFloat(currentCarbs),  StringToFloat(currentProteins), StringToFloat(currentFats), currentShop, currentLink],
         (txObj, resultSet) => {
           let existingIngredients = [...ingredients];
           existingIngredients.push({ id: resultSet.insertId, 
                 name: currentIngredient, 
-                price: StringToFloat(currentPrice), 
+                price: currentPrice, 
                 unit: currentUnit,
-                calories: StringToFloat(currentCalories),
-                carbs: StringToFloat(currentCarbs),
-                proteins: StringToFloat(currentProteins),
-                fats: StringToFloat(currentFats),
+                calories: currentCalories,
+                carbs: currentCarbs,
+                proteins: currentProteins,
+                fats: currentFats,
                 shop: currentShop,
                 link: currentLink,  });
           this.setState({ ingredients: existingIngredients, 
