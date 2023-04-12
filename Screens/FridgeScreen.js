@@ -1,6 +1,5 @@
 import React from 'react'
 import { View, Text, TextInput, StyleSheet, Button, Image, ScrollView } from 'react-native'
-import { Ingredient } from '../Components/Ingredient'
 import * as SQLite from 'expo-sqlite'
 
 

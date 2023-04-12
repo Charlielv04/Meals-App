@@ -2,6 +2,7 @@ import React, { Component } from 'react';
 import { View, Text, TextInput, Button, StyleSheet, StatusBar } from 'react-native';
 import * as SQLite from 'expo-sqlite'
 import { IngredientList } from '../../Components/IngredientList';
+import StringToFloat from '../../Components/StringToFloat';
 
 export class IngredientListScreen extends Component {
   constructor(props) {
@@ -26,7 +27,7 @@ export class IngredientListScreen extends Component {
     const { db } = this.state;
 
     db.transaction(tx => {
-      tx.executeSql('CREATE TABLE IF NOT EXISTS ingredients (id INTEGER PRIMARY KEY AUTOINCREMENT, name TEXT, price TEXT, unit TEXT, calories TEXT, carbs TEXT, proteins TEXT, fats TEXT, link TEXT, shop TEXT)')
+      tx.executeSql('CREATE TABLE IF NOT EXISTS ingredients (id INTEGER PRIMARY KEY AUTOINCREMENT, name TEXT, price FLOAT, unit TEXT, calories FLOAT, carbs FLOAT, proteins FLOAT, fats FLOAT, link TEXT, shop TEXT)')
     });
 
     db.transaction(tx => {

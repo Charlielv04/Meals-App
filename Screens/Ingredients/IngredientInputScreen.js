@@ -3,6 +3,7 @@ import { View, Text, TextInput, StyleSheet, Button, Image } from 'react-native'
 import { TwoOptionButton } from '../../Components/TwoOptionButton'
 import * as SQLite from 'expo-sqlite'
 import { IngredientList } from '../../Components/IngredientList'
+import StringToFloat from '../../Components/StringToFloat'
 
 
 
@@ -30,10 +31,6 @@ export class IngredientInputScreen extends React.Component{
         const { db } = this.state;
     
         db.transaction(tx => {
-          tx.executeSql('CREATE TABLE IF NOT EXISTS ingredients (id INTEGER PRIMARY KEY AUTOINCREMENT, name TEXT, price TEXT, unit TEXT, calories TEXT, carbs TEXT, proteins TEXT, fats TEXT)')
-        });
-    
-        db.transaction(tx => {
           tx.executeSql('SELECT * FROM ingredients', null,
             (txObj, resultSet) => this.setState({ ingredients: resultSet.rows._array }),
             (txObj, error) => console.log(error)
@@ -45,6 +42,7 @@ export class IngredientInputScreen extends React.Component{
 
   addIngredient = () => {
     const { db, ingredients, currentIngredient, currentPrice, currentUnit, currentCalories, currentCarbs, currentFats, currentProteins, currentLink, currentShop } = this.state;
+
     db.transaction(tx => {
       tx.executeSql('INSERT INTO ingredients (name, price, unit, calories, carbs, proteins, fats, shop, link ) values (?, ?, ?, ?, ?, ?, ?, ?, ?)', 
       [currentIngredient, currentPrice, currentUnit, currentCalories, currentCarbs,  currentProteins, currentFats, currentShop, currentLink],
@@ -52,12 +50,12 @@ export class IngredientInputScreen extends React.Component{
           let existingIngredients = [...ingredients];
           existingIngredients.push({ id: resultSet.insertId, 
                 name: currentIngredient, 
-                price: currentPrice, 
+                price: StringToFloat(currentPrice), 
                 unit: currentUnit,
-                calories: currentCalories,
-                carbs: currentCarbs,
-                proteins: currentProteins,
-                fats: currentFats,
+                calories: StringToFloat(currentCalories),
+                carbs: StringToFloat(currentCarbs),
+                proteins: StringToFloat(currentProteins),
+                fats: StringToFloat(currentFats),
                 shop: currentShop,
                 link: currentLink,  });
           this.setState({ ingredients: existingIngredients, 

@@ -25,7 +25,7 @@ export class MealListScreen extends Component {
     const { db } = this.state;
 
     db.transaction(tx => {
-        tx.executeSql('CREATE TABLE IF NOT EXISTS meals (id INTEGER PRIMARY KEY AUTOINCREMENT, name TEXT, price TEXT, calories TEXT, carbs TEXT, proteins TEXT, fats TEXT)')
+        tx.executeSql('CREATE TABLE IF NOT EXISTS meals (id INTEGER PRIMARY KEY AUTOINCREMENT, name TEXT, price FLOAT, calories FLOAT, carbs FLOAT, proteins FLOAT, fats FLOAT)')
     });
     db.transaction(tx => {
         tx.executeSql('CREATE TABLE IF NOT EXISTS meals_ingredients (id INTEGER PRIMARY KEY AUTOINCREMENT, meal FOREIGN KEY REFERENCES meals.id, ingredient FOREIGN KEY REFERENCES ingredients.id, quantity FLOAT, q_text TEXT)', null,
