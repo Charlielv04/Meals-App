@@ -93,8 +93,10 @@ export class IngredientInputScreen extends React.Component{
     db.transaction(tx => {
         tx.executeSql('DROP TABLE IF EXISTS ingredients')
         tx.executeSql('DROP TABLE IF EXISTS fridge')
+        tx.executeSql('DROP TABLE IF EXISTS meals')
+        tx.executeSql('DROP TABLE IF EXISTS meals_ingredients')
         },
-        (txObj, resultSet) => console.log('Table fridge dropped'),
+        (txObj, resultSet) => console.log(1),
         (txObj, error) => console.log(error)
       )
   }

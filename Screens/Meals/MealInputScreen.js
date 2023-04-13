@@ -17,7 +17,9 @@ export class MealInputScreen extends React.Component {
       calories: '',
       carbs: '',
       proteins: '',
-      fats: ''
+      fats: '',
+      meal_id: undefined, 
+      meals_ingredients: [],
     }
   }
 
@@ -82,7 +84,7 @@ export class MealInputScreen extends React.Component {
     }
   
   updateMealValues = () => {
-    const { ingredients, price, calories, proteins, carbs, fats } = this.state
+    const { ingredients } = this.state
     let [newPrice, newCalories, newProteins, newCarbs, newFats] = [0, 0, 0, 0, 0]
     ingredients.forEach((ingredient) => {
       newPrice += ingredient.price * ingredient.quantity
@@ -97,10 +99,9 @@ export class MealInputScreen extends React.Component {
         newFats += ingredient.fats * ingredient.quantity
         newCarbs += ingredient.carbs * ingredient.quantity
       }
-      console.log(ingredient)
     })
     this.setState({
-      price: newPrice,
+      price: newPrice.toFixed(2),
       calories: newCalories,
       proteins: newProteins,
       carbs: newCarbs,
@@ -108,7 +109,39 @@ export class MealInputScreen extends React.Component {
     })
   }
   addMeal = () => {
-
+    const { db, currentName, price, calories, proteins, carbs, fats, ingredients } = this.state;
+  
+    // Insert meal into meals table
+    db.transaction(tx => {
+      tx.executeSql(
+        'INSERT INTO meals (id, name, price, calories, carbs, proteins, fats) VALUES (?,?,?,?,?,?,?)',
+        [null, currentName, price, calories, proteins, carbs, fats],
+        (txObj, resultSet) => this.setState({meal_id: resultSet.insertId}),
+        (txObj, error) => console.log(error)
+      )
+    })
+    db.transaction(tx => {
+      ingredients.forEach((ingredient) => {
+        if(ingredient.quantity !== 0){
+          tx.executeSql('INSERT INTO meals_ingredients (meal, ingredient, quantity) VALUES (?,?,?)', 
+          [this.state.meal_id, ingredient.id, ingredient.quantity],
+          (txObj, error) => console.log(error))
+        }
+      })
+    })
+  this.props.navigation.navigate('MealListScreen')
+  };
+  
+  checkDatabase = () => {
+    const {db} = this.state
+    db.transaction(tx => {
+      tx.executeSql('SELECT * FROM meals_ingredients', null,
+      (txObj, resultSet) => {
+        this.setState({meals_ingredients: resultSet.rows._array})
+        console.log(this.state.meals_ingredients)
+      },
+      (txObj, error) => console.log(error))
+    })
   }
   render() {
     const { isLoading } = this.state;
@@ -161,7 +194,7 @@ export class MealInputScreen extends React.Component {
             placeholder= 'Name'
             onChangeText={(text) => this.setState({currentName: text})}
             />
-            <Text>{this.state.price}</Text>
+            <Text>{this.state.price}€</Text>
           </View>
           <View style={styles.row}>
             <Text>Calories: {this.state.calories}</Text>
@@ -170,6 +203,7 @@ export class MealInputScreen extends React.Component {
             <Text>Fats: {this.state.fats}</Text>
           </View>
           <Button title='Add Meal' onPress={() => this.addMeal()}/>
+          <Button title='Check Database' onPress={() => this.checkDatabase()} />
       </View>
       )
     }
