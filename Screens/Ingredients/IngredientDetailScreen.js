@@ -19,7 +19,6 @@ export class IngredientDetailScreen extends React.Component {
             (txObj, resultSet) => {
                 ingredient  = resultSet.rows._array[0]
                 this.setState({ingredient})
-                console.log(this.state.ingredient)
 
             },
             (txObj, error) => {

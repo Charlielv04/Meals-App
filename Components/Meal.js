@@ -7,10 +7,14 @@ export class Meal extends React.Component {
     }
     render(){
         return(
-            <View key={this.props.index} style={styles.row}>
-                <Text style={styles.title}>{this.props.meal.name}</Text>
-                <Text style={styles.text}>{this.props.meal.price}€</Text>
-            </View>
+        <View key={this.props.index} style={styles.row}>
+            <TouchableHighlight onPress = {() => this.props.mealDetails(this.props.meal.id)} underlayColor='transparent'>
+                <View style = {styles.row}>
+                    <Text style={styles.title}>{this.props.meal.name}</Text>
+                    <Text style={styles.text}>{this.props.meal.price}€</Text>
+                </View>
+            </TouchableHighlight>
+        </View>
         )
     }
 }

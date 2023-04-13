@@ -27,7 +27,8 @@ export class IngredientListScreen extends Component {
     const { db } = this.state;
 
     db.transaction(tx => {
-      tx.executeSql('CREATE TABLE IF NOT EXISTS ingredients (id INTEGER PRIMARY KEY AUTOINCREMENT, name TEXT, price FLOAT, unit TEXT, calories FLOAT, carbs FLOAT, proteins FLOAT, fats FLOAT, link TEXT, shop TEXT)')
+      tx.executeSql(`CREATE TABLE IF NOT EXISTS ingredients (id INTEGER PRIMARY KEY AUTOINCREMENT, name TEXT, price FLOAT, unit TEXT, 
+        calories FLOAT, carbs FLOAT, proteins FLOAT, fats FLOAT, link TEXT, shop TEXT)`)
     });
 
     db.transaction(tx => {
