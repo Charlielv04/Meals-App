@@ -98,6 +98,13 @@ export class IngredientInputScreen extends React.Component{
         (txObj, error) => console.log(error)
       )
   }
+  nutritionalValue = () => {
+    if(this.state.currentUnit==='kg'){
+      return '100g'
+    } else {
+      return 'unit'
+    }
+  }
   render() {
     const { isLoading, currentIngredient, currentPrice, currentUnit, currentCalories, currentCarbs, currentFats, currentProteins, currentShop, currentLink } = this.state;
     if (isLoading) {
@@ -118,7 +125,7 @@ export class IngredientInputScreen extends React.Component{
                     option2Text='unit'
                     onPress={this.handleUnitChange}/>
         </View>
-        <Text>Nutritional Value per 100g</Text>
+        <Text>Nutritional Value per {this.nutritionalValue()}</Text>
         <View style={styles.row}>
             <TextInput value={currentCalories} keyboardType='numeric' placeholder='kcal' onChangeText={(text) => this.setState({ currentCalories: text })} />
             <TextInput value={currentCarbs} keyboardType='numeric' placeholder='carbs' onChangeText={(text) => this.setState({ currentCarbs: text })} />

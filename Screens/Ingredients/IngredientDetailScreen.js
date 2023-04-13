@@ -42,7 +42,7 @@ export class IngredientDetailScreen extends React.Component {
                 <Text style={styles.title}>{this.state.ingredient.name}</Text>
                 <Text style={styles.text}>
                     This product is available at <Text onPress={() => Linking.openURL(this.state.ingredient.link)} style={styles.link}>{this.state.ingredient.shop}</Text> for the amazing price 
-                    of {this.state.ingredient.price}/{this.state.ingredient.unit}.
+                    of {this.state.ingredient.price}€/{this.state.ingredient.unit}.
                     Surprisingly it is very nutritive 
                     with {this.state.ingredient.calories} kcal, {this.state.ingredient.carbs} g of 
                     carbohydrates, {this.state.ingredient.proteins} g of proteins, 
