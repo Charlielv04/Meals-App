@@ -56,6 +56,15 @@ export class IngredientListScreen extends Component {
     });
   };
 
+  clearDatabase = () => {
+    const { db } = this.state
+    db.transaction(tx => {
+      tx.executeSql('DROP TABLE fridge')
+      tx.executeSql('DROP TABLE meals')
+      tx.executeSql('DROP TABLE shopping')
+    })
+  }
+
   ingredientDetails = (id) => {
     this.props.navigation.navigate('IngredientDetailScreen', {id: id})
   }
@@ -78,6 +87,7 @@ export class IngredientListScreen extends Component {
       <View style={styles.container}>
         <Button title="Add Ingredient" onPress={this.addIngredientScreen} />
         <IngredientList ingredients={this.state.ingredients} deleteIngredient={this.deleteIngredient} ingredientDetails={this.ingredientDetails}/>
+        <Button title = "Clear Databases" onPress={this.clearDatabase} />
       </View>
     )
   }

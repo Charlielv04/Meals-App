@@ -72,7 +72,7 @@ export class MealDetailScreen extends React.Component {
             tx.executeSql('DELETE FROM meals_ingredients WHERE meal = ?', [id],
             (txObj, error) => console.log(error))
         })
-        this.props.navigation.navigate('IngredientListScreen')
+        this.props.navigation.navigate('MealListScreen')
     }
     render(){
         return(
@@ -86,7 +86,7 @@ export class MealDetailScreen extends React.Component {
                     carbohydrates, {this.state.meal.proteins} g of proteins, 
                     and {this.state.meal.fats} g of fats per 100 grams. 
                 </Text>
-                <Button title='Delete' onPress={this.deleteIngredient} />
+                <Button title='Delete' onPress={this.deleteMeal}/>
             </View>
         )
     }    

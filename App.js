@@ -6,7 +6,7 @@ import { createBottomTabNavigator } from '@react-navigation/bottom-tabs'
 import { FridgeScreen } from './Screens/FridgeScreen'
 import MealStackScreen from './Screens/Meals/MealStackScreen'
 import { MealsSelectorScreen } from './Screens/MealSelectorScreen'
-import { ShoppingScreen } from './Screens/ShoppingScreen'
+import ShoppingStackScreen from './Screens/Shopping/ShoppingStackScreen'
 import IngredientStackScreen from './Screens/Ingredients/IngredientStackScreen'
 
 const Tab = createBottomTabNavigator()
@@ -20,7 +20,7 @@ export default class App extends React.Component {
         <Tab.Screen name='Ingredients' component={IngredientStackScreen} />
         <Tab.Screen name='Meals' component={MealStackScreen} />
         <Tab.Screen name='Fridge' component={FridgeScreen} />
-        <Tab.Screen name='Shopping' component={ShoppingScreen} />
+        <Tab.Screen name='Shopping' component={ShoppingStackScreen} />
         <Tab.Screen name='MealSelector' component={MealsSelectorScreen} />
       </Tab.Navigator>
     </NavigationContainer>

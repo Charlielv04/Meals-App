@@ -1,11 +1,11 @@
 import React from 'react'
 import { View, Text, TextInput, StyleSheet, Button, Image, ScrollView } from 'react-native'
 import * as SQLite from 'expo-sqlite'
-import StringToFloat from '../Components/StringToFloat'
+import StringToFloat from '../../Components/StringToFloat'
 
 
 
-export class FridgeScreen extends React.Component{
+export class ShoppingListScreen extends React.Component{
     constructor(props){
         super(props)
         this.state = {
@@ -18,35 +18,31 @@ export class FridgeScreen extends React.Component{
         const { db } = this.state;
 
         db.transaction(tx => {
-            tx.executeSql(
-              `CREATE TABLE IF NOT EXISTS fridge (id INTEGER PRIMARY KEY AUTOINCREMENT, quantity FLOAT, ingredient_id INTEGER, 
-                FOREIGN KEY(ingredient_id) REFERENCES ingredients(id))`)
-        })
+            tx.executeSql('CREATE TABLE IF NOT EXISTS fridge (id INTEGER PRIMARY KEY AUTOINCREMENT, name TEXT, quantity FLOAT, qtext TEXT)')
+        });
         db.transaction(tx => {
-            tx.executeSql('INSERT INTO fridge (quantity, ingredient_id) SELECT 0, i.id FROM ingredients i WHERE NOT EXISTS (SELECT * FROM fridge f WHERE f.ingredient_id = i.id)', null,
+            tx.executeSql('INSERT INTO fridge (name, quantity, qtext) SELECT i.name, 0.0, 0 FROM ingredients i WHERE NOT EXISTS (SELECT * FROM fridge f WHERE f.name = i.name)', null,
             (txObj, error) => console.log(error))
         })
         db.transaction(tx => {
-          tx.executeSql(
-            'SELECT f.id, i.name, f.quantity FROM ingredients i INNER JOIN fridge f ON i.id = f.ingredient_id',
-            null,
-            (txObj, resultSet) => {
-              newFridge = resultSet.rows._array
-              fridge = newFridge.map((ingredient) => {
-                if (ingredient.quantity === 0){
-                  return { ...ingredient, qtext: '' }
-                } else {
-                  return { ...ingredient, qtext: ingredient.quantity.toString()}
-                }
-              })
-              this.setState({ fridge })
-            },
-            (txObj, error) => console.log(error)
-          )
+            tx.executeSql('SELECT * FROM fridge', null,
+            (txObj, resultSet) => this.setState({ fridge: resultSet.rows._array }),
+            (txObj, error) => console.log(error))
         })
-        
         this.setState({ isLoading: false })  
     }
+    
+    componentWillUnmount() {
+        const { db, fridge } = this.state;
+        db.transaction(tx => {
+          fridge.forEach(ingredient => {
+            tx.executeSql('UPDATE fridge SET quantity=?, qtext=? WHERE name=?', [ingredient.quantity, ingredient.qtext, ingredient.name],
+              (txObj, resultSet) => console.log('Quantity updated for ' + ingredient.name),
+              (txObj, error) => console.log('Error updating quantity for ' + ingredient.name + ': ' + error));
+          })
+        })
+    }
+
     handleQuantityChange = (index, qtext) => {
         const { fridge } = this.state
         const newFridge = [...fridge]
@@ -57,23 +53,15 @@ export class FridgeScreen extends React.Component{
           newFridge[index].quantity = StringToFloat(qtext);
           newFridge[index].qtext = qtext
         }
-        this.setState({ fridge: newFridge })
-        const { db } = this.state;
-        db.transaction((tx) => {
-        tx.executeSql('UPDATE fridge SET quantity=? WHERE id = ?', [newFridge[index].quantity, newFridge[index].id],
-          (txObj, resultSet) => console.log('Quantity updated for ' + newFridge[index].name),
-          (txObj, error) => console.log('Error updating quantity for ' + newFridge[index].name + ': ' + error))
-        })
-    }
-    checkDatabase = () => {
-      const { db } = this.state
-      db.transaction(tx => {
-        tx.executeSql('SELECT i.name, f.quantity FROM fridge f INNER JOIN ingredients i ON i.id=f.ingredient_id', [],
-        (txObj, resultSet) => console.log(resultSet.rows._array),
-        (txObj, error) => console.log(error))
-      })
-      console.log(this.state.fridge)
-    }
+        this.setState({ fridge: newFridge }, () => {
+          const { db } = this.state;
+          db.transaction(tx => {
+            tx.executeSql('UPDATE fridge SET quantity=?, qtext=? WHERE name=?', [newFridge[index].quantity, newFridge[index].qtext, newFridge[index].name],
+              (txObj, resultSet) => console.log('Quantity updated for ' + newFridge[index].name),
+              (txObj, error) => console.log('Error updating quantity for ' + newFridge[index].name + ': ' + error));
+          });
+        });
+    };
 
     showFridge = () => {
         return (
@@ -92,7 +80,7 @@ export class FridgeScreen extends React.Component{
                     }
                   />
                 </View>
-              )
+              );
             })}
           </View>
           </ScrollView>
@@ -103,7 +91,6 @@ export class FridgeScreen extends React.Component{
         return(
             <View>
                 {this.showFridge()}
-                <Button onPress={this.checkDatabase} title='check databse'/>
             </View>
         )
     }
